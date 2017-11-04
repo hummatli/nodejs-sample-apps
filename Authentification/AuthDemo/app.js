@@ -38,7 +38,7 @@ app.get("/", function(req, res) {
     res.render("home")
 })
 
-app.get("/secret", function(req, res) {
+app.get("/secret", isLoggedIn, function(req, res) {
     res.render("secret")
 })
 
@@ -78,6 +78,20 @@ app.post("/login", passport.authenticate("local", {
 }), function(req, res) {
     
 })
+
+//LOGOUT ROUTE
+app.get("/logout", function(req, res) {
+    req.logout()
+    res.redirect("/")
+})
+
+//MIDDLEWARE
+function isLoggedIn(req, res, next) {
+    if(req.isAuthenticated()) {
+        return next()
+    }
+    res.redirect("/login")
+}
 
 app.listen(process.env.PORT, process.env.IP, function() {
     console.log("AuthDemo is listening...")
